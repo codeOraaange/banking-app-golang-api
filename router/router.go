@@ -1,8 +1,8 @@
 package router
 
 import (
-	"banking-app-golang-api/controllers"
-	// "banking-app-golang-api/middleware"
+	"social-media-app/controllers"
+	"social-media-app/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -15,11 +15,13 @@ func StartApp(DB *pgxpool.Pool) *gin.Engine {
 		c.Next()
 	})
 
-	// userAccount := router.Group("/v1/user")
-	// {
-	// 	userAccount.POST("/register", middleware.RegisterValidator(), controllers.UserRegister)
-	// 	userAccount.POST("/login", middleware.AuthValidator(), controllers.UserLogin)
-	// }
+	userAccount := router.Group("/v1/user")
+	{
+		userAccount.POST("/register", middleware.RegisterValidator(), controllers.UserRegister)
+		userAccount.POST("/login", middleware.AuthValidator(), controllers.UserLogin)
+	}
+
+	router.POST("/v1/image", middleware.Authentication(), controllers.CreateUploadImage)
 
 	router.GET("/health-check", controllers.ServerCheck)
 

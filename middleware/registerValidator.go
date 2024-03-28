@@ -2,17 +2,17 @@ package middleware
 
 import (
 	"net/http"
-	"banking-app-golang-api/helpers"
-	"banking-app-golang-api/models"
+	"social-media-app/helpers"
+	"social-media-app/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var user models.UsersForAuth
+		var userRegister user.UserRegisterRequest
 
-		if payloadValidationError := context.ShouldBindJSON(&user); payloadValidationError != nil {
+		if payloadValidationError := context.ShouldBindJSON(&userRegister); payloadValidationError != nil {
 			var errors []string
 
 			if payloadValidationError.Error() == "EOF" {
@@ -28,7 +28,7 @@ func RegisterValidator() gin.HandlerFunc {
 			return
 		}
 
-		context.Set("request", user)
+		context.Set("request", userRegister)
 		context.Next()
 	}
 }

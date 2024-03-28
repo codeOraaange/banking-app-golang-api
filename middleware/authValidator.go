@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"banking-app-golang-api/helpers"
-	"banking-app-golang-api/models"
+	"social-media-app/helpers"
+	"social-media-app/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 
 func AuthValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var loginRequest models.UserRequest
+		var loginRequest user.UserLoginRequest
 
 		if payloadValidationError := context.ShouldBindJSON(&loginRequest); payloadValidationError != nil {
 			var errors []string

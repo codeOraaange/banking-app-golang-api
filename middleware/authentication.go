@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"banking-app-golang-api/helpers"
+	"social-media-app/helpers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

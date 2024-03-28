@@ -1,4 +1,4 @@
-# banking-app-golang-api
+# banking-app
 
 ## Prerequisites
 1. Installed ```golang-migrate-cli```, here is the how to https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
@@ -13,22 +13,22 @@
 ## Migration guide
 1. Add migration script
 ```
-migrate create -ext sql -dir migrations -seq add_user_table
+migrate create -ext sql -dir db/migrations -seq add_user_table
 ```
 
 2. To execute migration
 ```
-migrate -database "postgres://{username}:{password}@{host}:{port}/{dbname}?sslmode=disable" -path migrations up
+migrate -database "postgres://{username}:{password}@{host}:{port}/{dbname}?sslmode=disable" -path db/migrations up
 ```
 
 3. To rollback migration
 ```
-migrate -database "postgres://{username}:{password}@{host}:{port}/{dbname}?sslmode=disable" -path migrations down
+migrate -database "postgres://{username}:{password}@{host}:{port}/{dbname}?sslmode=disable" -path db/migrations down
 ```
 
 4. Example
 ```
-migrate -database "postgres://postgres:P4ssW0rd@localhost:5434/marketplace_db?sslmode=disable" -path migrations up
+migrate -database "postgres://postgres:P4ssW0rd@localhost:5434/marketplace_db?sslmode=disable" -path db/migrations up
 ```
 
 5. If you want to add postgres docker for local development

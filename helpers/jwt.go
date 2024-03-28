@@ -10,17 +10,20 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = os.Getenv("JWT_SECRET")
+var (
+	// Secret key for JWT token signing
+	secretKey = []byte(os.Getenv("JWT_SECRET"))
+)
 
-func GenerateToken(id int, username string) (string, error) {
+// GenerateToken generates a JWT token with the provided user ID and email
+func GenerateToken(id int) (string, error) {
 	claims := jwt.MapClaims{
-		"id": id,
-		"username": username,
-		"exp": time.Now().Add(time.Hour * 8), // expire in 8 hours
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 8).Unix(),
 	}
 
-	parseToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := parseToken.SignedString([]byte(secretKey))
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
@@ -28,45 +31,42 @@ func GenerateToken(id int, username string) (string, error) {
 	return signedToken, nil
 }
 
-func VerifyToken(ctx *gin.Context) (interface{}, error) {
+// VerifyToken verifies the JWT token provided in the request header
+func VerifyToken(ctx *gin.Context) (jwt.MapClaims, error) {
 	headerToken := ctx.Request.Header.Get("Authorization")
-	bearer := strings.HasPrefix(headerToken, "Bearer")
-
-	if !bearer {
-		return nil, errors.New("sign in to proceed")
+	if headerToken == "" {
+		return nil, errors.New("authorization header is missing")
 	}
 
-	stringToken := strings.Split(headerToken, " ")[1]
-	token, _ := jwt.Parse(stringToken, func(t *jwt.Token) (interface{}, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New("sign in to proceed")
+	parts := strings.Split(headerToken, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return nil, errors.New("invalid token format")
+	}
+
+	stringToken := parts[1]
+	token, err := jwt.Parse(stringToken, func(t *jwt.Token) (interface{}, error) {
+		if t.Method != jwt.SigningMethodHS256 {
+			return nil, errors.New("invalid token signing method")
 		}
-		return []byte(secretKey), nil
+		return secretKey, nil
 	})
+	if err != nil || !token.Valid {
+		return nil, errors.New("invalid token")
+	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok && !token.Valid {
-		return nil, errors.New("sign in to proceed")
-	}
-
-	expClaim, exists := claims["exp"]
-	if !exists {
-		return nil, errors.New("expire claim is missing")
-	}
-
-	expStr, ok := expClaim.(string)
 	if !ok {
-		return nil, errors.New("expire claim is not a valid type")
+		return nil, errors.New("invalid token claims")
 	}
 
-	expTime, err := time.Parse(time.RFC3339, expStr)
-	if err != nil {
-		return nil, errors.New("error parsing expiration time")
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return nil, errors.New("expiration time is missing or invalid")
 	}
 
-	if time.Now().After(expTime) {
-		return nil, errors.New("token is expired")
+	if int64(exp) < time.Now().Unix() {
+		return nil, errors.New("token has expired")
 	}
 
-	return token.Claims.(jwt.MapClaims), nil
+	return claims, nil
 }

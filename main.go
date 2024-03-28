@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"banking-app-golang-api/database"
-	"banking-app-golang-api/router"
+	"social-media-app/database"
+	"social-media-app/router"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const (
-	PORT = ":8000"
+	PORT = ":8080"
 )
 
 func main() {
