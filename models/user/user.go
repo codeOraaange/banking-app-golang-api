@@ -1,9 +1,5 @@
 package user
 
-import (
-	"social-media-app/helpers"
-)
-
 type UserRegisterRequest struct {
 	Name     string `json:"name" binding:"required,min=5,max=30" validate:"required,min=5,max=30"`
 	Password string `json:"password" binding:"required,min=5,max=30" validate:"required,min=5,max=30"`
@@ -21,17 +17,4 @@ type UserResponse struct {
 	Email       string `json:"email"`
 	Password    string `json:"-"`
 	AccessToken string `json:"accessToken"`
-}
-
-func (user *UserRegisterRequest) HashPassword() error {
-	hashedPassword, err := helpers.HashPassword(user.Password)
-	if err != nil {
-		return err
-	}
-	user.Password = hashedPassword
-	return nil
-}
-
-func BeforeCreateUser(user *UserRegisterRequest) {
-	user.HashPassword()
 }
