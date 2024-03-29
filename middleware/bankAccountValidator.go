@@ -1,18 +1,19 @@
 package middleware
 
 import (
-	"social-media-app/helpers"
-	"social-media-app/models/user"
+	"fmt"
 	"net/http"
+	"social-media-app/helpers"
+	"social-media-app/models"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AuthValidator() gin.HandlerFunc {
+func BankAccountValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var loginRequest user.UserLoginRequest
-
-		if payloadValidationError := context.ShouldBindJSON(&loginRequest); payloadValidationError != nil {
+		var bankAccountRequest models.BankAccountRequest
+		fmt.Println("line 14")
+		if payloadValidationError := context.ShouldBindJSON(&bankAccountRequest); payloadValidationError != nil {
 			var errors []string
 
 			if payloadValidationError.Error() == "EOF" {
@@ -27,8 +28,8 @@ func AuthValidator() gin.HandlerFunc {
 			})
 			return
 		}
-
-		context.Set("request", loginRequest)
+		fmt.Println("line 31")
+		context.Set("request", bankAccountRequest)
 		context.Next()
 	}
 }

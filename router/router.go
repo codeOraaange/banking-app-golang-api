@@ -21,6 +21,13 @@ func StartApp(DB *pgxpool.Pool) *gin.Engine {
 		userAccount.POST("/login", middleware.AuthValidator(), controllers.UserLogin)
 	}
 
+	bankAccount := router.Group("/v1/balance")
+	{
+		bankAccount.POST("/", middleware.BankAccountValidator(), controllers.PostBalance)
+		bankAccount.GET("/")
+		bankAccount.GET("/history")
+	}
+
 	router.POST("/v1/image", middleware.Authentication(), controllers.CreateUploadImage)
 
 	router.GET("/health-check", controllers.ServerCheck)
