@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
-	"social-media-app/models"
+	"social-media-app/models/user"
 	"time"
 
 	"github.com/jackc/pgx/v5"
