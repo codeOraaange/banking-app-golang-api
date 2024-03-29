@@ -23,6 +23,7 @@ var (
 )
 
 func StartApp(DB *pgxpool.Pool) *gin.Engine {
+	prometheus.Register(requestHistogram)
 	router := gin.Default()
 	router.Use(func(c *gin.Context) {
 		c.Set("DB", DB)
@@ -45,18 +46,18 @@ func StartApp(DB *pgxpool.Pool) *gin.Engine {
 }
 
 func wrapHandlerWithMetrics(path, method string, handler gin.HandlerFunc, middleware ...gin.HandlerFunc) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		startTime := time.Now()
+  return func(c *gin.Context) {
+    startTime := time.Now()
 
-		// Chain middleware functions
-		for _, m := range middleware {
-			m(c)
-		}
+    // Chain middleware functions
+    for _, m := range middleware {
+      m(c)
+    }
 
-		handler(c)
+    handler(c)
 
-		duration := time.Since(startTime).Seconds()
-		log.Println(path, method, strconv.Itoa(c.Writer.Status()))
-		requestHistogram.WithLabelValues(path, method, strconv.Itoa(c.Writer.Status())).Observe(duration)
-	}
+    duration := time.Since(startTime).Seconds()
+    log.Printf("Request path: %s, method: %s, status: %d, duration: %f seconds\n", path, method, c.Writer.Status(), duration)
+    requestHistogram.WithLabelValues(path, method, strconv.Itoa(c.Writer.Status())).Observe(duration)
+  }
 }
