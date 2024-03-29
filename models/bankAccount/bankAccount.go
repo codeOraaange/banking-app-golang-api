@@ -1,4 +1,4 @@
-package models
+package bankAccount
 
 type BankAccountRequest struct {
 	SenderBankAccountNumber string  `json:"senderBankAccountNumber" binding:"required,min=5,max=30" validate:"required,min=5,max=30"`

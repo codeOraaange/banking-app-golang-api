@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"social-media-app/helpers"
-	"social-media-app/models"
+	// "social-media-app/models/user"
+	"social-media-app/models/bankAccount"
 	"social-media-app/services"
 	// "strings"
 
@@ -12,10 +13,10 @@ import (
 	// jwt5 "github.com/golang-jwt/jwt/v5"
 )
 
-func handlePostBalanceRequest(ctx *gin.Context) (models.BankAccountRequest, error) {
-	request, ok := ctx.MustGet("request").(models.BankAccountRequest)
+func handlePostBalanceRequest(ctx *gin.Context) (bankAccount.BankAccountRequest, error) {
+	request, ok := ctx.MustGet("request").(bankAccount.BankAccountRequest)
 	if !ok {
-		return models.BankAccountRequest{}, fmt.Errorf("failed to cast request to BankAccountRequest")
+		return bankAccount.BankAccountRequest{}, fmt.Errorf("failed to cast request to BankAccountRequest")
 	}
 	return request, nil
 }

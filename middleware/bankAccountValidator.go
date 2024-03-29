@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"net/http"
 	"social-media-app/helpers"
-	"social-media-app/models"
+	"social-media-app/models/bankAccount"
 
 	"github.com/gin-gonic/gin"
 )
 
 func BankAccountValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var bankAccountRequest models.BankAccountRequest
+		var bankAccountRequest bankAccount.BankAccountRequest
 		fmt.Println("line 14")
 		if payloadValidationError := context.ShouldBindJSON(&bankAccountRequest); payloadValidationError != nil {
 			var errors []string

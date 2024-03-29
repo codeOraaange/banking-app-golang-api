@@ -1,4 +1,4 @@
-package models
+package transaction
 
 type TransactionRequest struct {
 	RecipientBankAccountNumber string `json:"recipientBankAccountNumber" binding:"required" validate:""`
