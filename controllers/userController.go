@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"social-media-app/helpers"
-	"social-media-app/models"
+	"social-media-app/models/user"
 	"social-media-app/services"
 	"strings"
 
