@@ -1,5 +1,7 @@
 package transaction
 
+import "time"
+
 type TransactionRequest struct {
 	RecipientBankAccountNumber string `json:"recipientBankAccountNumber" binding:"required" validate:""`
 	RecipientBankName          string `json:"recipientBankName" binding:"required" validate:""`
@@ -8,10 +10,11 @@ type TransactionRequest struct {
 }
 
 type TransactionResponse struct {
-	ID               int    `json:"id"`
-	TransferProofImg string `json:"transferProofImg"`
-	SenderId         int    `json:"senderId"`
-	RecipientId      int    `json:"recipientId"`
-	Amount           int    `json:"amount"`
-	Type             string `json:"type"`
+	ID               int       `json:"id"`
+	TransferProofImg string    `json:"transferProofImg"`
+	SenderId         int       `json:"senderId"`
+	RecipientId      int       `json:"recipientId"`
+	Amount           int       `json:"amount"`
+	Type             string    `json:"type"`
+	CreatedAt        time.Time `json:"createdAt"`
 }
