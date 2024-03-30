@@ -28,6 +28,11 @@ func StartApp(DB *pgxpool.Pool) *gin.Engine {
 		bankAccount.GET("/history", middleware.Authentication(), controllers.GetBalanceByHistory)
 	}
 
+	transaction := router.Group("/v1/transaction")
+	{
+		transaction.POST("/", middleware.Authentication(), middleware.TransactionValidator(), controllers.PostTransaction)
+	}
+
 	router.POST("/v1/image", middleware.Authentication(), controllers.CreateUploadImage)
 
 	router.GET("/health-check", controllers.ServerCheck)
