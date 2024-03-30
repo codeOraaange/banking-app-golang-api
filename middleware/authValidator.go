@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"social-media-app/helpers"
-	"social-media-app/models"
+	"social-media-app/models/user"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
