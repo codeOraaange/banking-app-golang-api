@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"social-media-app/helpers"
-	"social-media-app/models"
+	"social-media-app/models/user"
 	"social-media-app/services"
 	"strings"
 
@@ -41,7 +41,13 @@ func UserRegister(ctx *gin.Context) {
 		return
 	}
 
-	user.BeforeCreateUser(&userRequest)
+	hashedPassword, err := helpers.HashPassword(userRequest.Password)
+	if err != nil {
+		helpers.HandleErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	userRequest.Password = hashedPassword
 
 	createdUser, createError := services.CreateUser(DB, userRequest)
 	if createError != nil {
