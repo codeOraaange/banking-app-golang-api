@@ -10,7 +10,7 @@ import (
 
 func AuthValidator() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var loginRequest user.UserLoginRequest
+		var loginRequest user.User
 
 		if payloadValidationError := context.ShouldBindJSON(&loginRequest); payloadValidationError != nil {
 			var errors []string

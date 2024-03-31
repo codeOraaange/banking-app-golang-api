@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func CreateUser(DB *pgxpool.Pool, userRegister user.UserRegisterRequest) (*user.UserResponse, error) {
+func CreateUser(DB *pgxpool.Pool, userRegister user.User) (*user.UserResponse, error) {
 	ctx := context.Background()
 
 	var user user.UserResponse

@@ -12,18 +12,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func handleRegisterRequest(ctx *gin.Context) (user.UserRegisterRequest, error) {
-	request, ok := ctx.MustGet("request").(user.UserRegisterRequest)
+func handleRequest(ctx *gin.Context) (user.User, error) {
+	request, ok := ctx.MustGet("request").(user.User)
 	if !ok {
-			return user.UserRegisterRequest{}, fmt.Errorf("failed to cast request to UserRegisterRequest")
-	}
-	return request, nil
-}
-
-func handleLoginRequest(ctx *gin.Context) (user.UserLoginRequest, error) {
-	request, ok := ctx.MustGet("request").(user.UserLoginRequest)
-	if !ok {
-			return user.UserLoginRequest{}, fmt.Errorf("failed to cast request to UserLoginRequest")
+			return user.User{}, fmt.Errorf("failed to cast request to UserRegisterRequest")
 	}
 	return request, nil
 }
@@ -35,7 +27,7 @@ func UserRegister(ctx *gin.Context) {
 		return
 	}
 
-	userRequest, err := handleRegisterRequest(ctx)
+	userRequest, err := handleRequest(ctx)
 	if err != nil {
 		helpers.HandleErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -83,7 +75,7 @@ func UserLogin(ctx *gin.Context) {
 		return
 	}
 
-	userRequest, err := handleLoginRequest(ctx)
+	userRequest, err := handleRequest(ctx)
 	if err != nil {
 		helpers.HandleErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
